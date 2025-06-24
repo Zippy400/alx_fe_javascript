@@ -240,7 +240,7 @@ async function fetchQuotesFromServer() {
 
   return serverQuotes;
 }
-async function syncWithServer() {
+async function syncQuotes() {
   const serverQuotes = await fetchQuotesFromServer();
 
   let hasConflict = false;
@@ -260,7 +260,7 @@ async function syncWithServer() {
     filterQuotes();
   }
 }
-setInterval(syncWithServer, 30000); // sync every 30 seconds
+setInterval(syncQuotes, 30000); // sync every 30 seconds
 if (hasConflict) {
   alert("New quotes were synced from the server.");
 }
