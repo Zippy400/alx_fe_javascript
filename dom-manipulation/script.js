@@ -254,10 +254,12 @@ async function syncQuotes() {
   });
 
   if (hasConflict) {
-    alert("New quotes were synced from the server.");
-    saveQuotes();
-    populateCategories();
-    filterQuotes();
+  alert("Quotes synced with server!");
+  saveQuotes();
+  populateCategories();
+  filterQuotes();
+}
+
   }
 }
 setInterval(syncQuotes, 30000); // sync every 30 seconds
