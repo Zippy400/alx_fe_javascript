@@ -165,6 +165,48 @@ function filterQuotes() {
   quoteDisplay.innerHTML = `<blockquote>"${quote.text}"</blockquote><p><em>Category: ${quote.category}</em></p>`;
 }
 function addQuote() {
+    async function postQuoteToServer(quote) {
+  try {
+    const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: quote.text,
+        body: quote.category,
+        userId: 1
+      })
+    });
+
+    const data = await response.json();
+    console.log("Posted quote to server:", data);
+  } catch (error) {
+    console.error("Failed to post quote:", error);
+  }
+}
+function addQuote() {
+  const quoteText = document.getElementById('newQuoteText').value.trim();
+  const quoteCategory = document.getElementById('newQuoteCategory').value.trim();
+
+  if (quoteText && quoteCategory) {
+    const newQuote = { text: quoteText, category: quoteCategory };
+    quotes.push(newQuote);
+    saveQuotes();
+    populateCategories();
+    alert('Quote added successfully!');
+
+    // Post to server
+    postQuoteToServer(newQuote);
+
+    // Reset form
+    document.getElementById('newQuoteText').value = '';
+    document.getElementById('newQuoteCategory').value = '';
+  } else {
+    alert('Please fill in both fields.');
+  }
+}
+
   const quoteText = document.getElementById('newQuoteText').value.trim();
   const quoteCategory = document.getElementById('newQuoteCategory').value.trim();
 
