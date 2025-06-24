@@ -65,3 +65,61 @@ function createAddQuoteForm() {
   formContainer.appendChild(addButton);
 }
 createAddQuoteForm(); // Dynamically builds the quote form
+
+let quotes = [];
+
+// Load from local storage if available
+function loadQuotes() {
+  const storedQuotes = localStorage.getItem('quotes');
+  if (storedQuotes) {
+    quotes = JSON.parse(storedQuotes);
+  } else {
+    quotes = [
+      { text: "The only limit is your mind.", category: "Motivation" },
+      { text: "Be yourself; everyone else is already taken.", category: "Life" },
+      { text: "Simplicity is the ultimate sophistication.", category: "Design" }
+    ];
+  }
+}
+function saveQuotes() {
+  localStorage.setItem('quotes', JSON.stringify(quotes));
+}
+loadQuotes();  // Load from localStorage on page load
+function showRandomQuote() {
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  const quote = quotes[randomIndex];
+  quoteDisplay.innerHTML = `<blockquote>"${quote.text}"</blockquote><p><em>Category: ${quote.category}</em></p>`;
+  sessionStorage.setItem('lastQuote', JSON.stringify(quote));
+}
+function exportToJson() {
+  const dataStr = JSON.stringify(quotes, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const downloadLink = document.createElement("a");
+  downloadLink.href = url;
+  downloadLink.download = "quotes.json";
+  downloadLink.click();
+
+  URL.revokeObjectURL(url);
+}
+function importFromJsonFile(event) {
+  const fileReader = new FileReader();
+
+  fileReader.onload = function(event) {
+    try {
+      const importedQuotes = JSON.parse(event.target.result);
+      if (Array.isArray(importedQuotes)) {
+        quotes.push(...importedQuotes);
+        saveQuotes();
+        alert('Quotes imported successfully!');
+      } else {
+        alert('Invalid file format!');
+      }
+    } catch (error) {
+      alert('Error reading file!');
+    }
+  };
+
+  fileReader.readAsText(event.target.files[0]);
+}
