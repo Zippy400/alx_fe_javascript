@@ -37,3 +37,31 @@ addQuoteBtn.addEventListener('click', addQuote);
 
 // Show a quote on page load
 showRandomQuote();
+
+function createAddQuoteForm() {
+  const formContainer = document.getElementById('quoteForm');
+
+  // Create input for quote text
+  const quoteInput = document.createElement('input');
+  quoteInput.id = 'newQuoteText';
+  quoteInput.type = 'text';
+  quoteInput.placeholder = 'Enter a new quote';
+
+  // Create input for quote category
+  const categoryInput = document.createElement('input');
+  categoryInput.id = 'newQuoteCategory';
+  categoryInput.type = 'text';
+  categoryInput.placeholder = 'Enter quote category';
+
+  // Create button to add quote
+  const addButton = document.createElement('button');
+  addButton.id = 'addQuoteBtn';
+  addButton.textContent = 'Add Quote';
+  addButton.onclick = addQuote;
+
+  // Append to container
+  formContainer.appendChild(quoteInput);
+  formContainer.appendChild(categoryInput);
+  formContainer.appendChild(addButton);
+}
+createAddQuoteForm(); // Dynamically builds the quote form
