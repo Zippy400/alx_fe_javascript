@@ -184,3 +184,46 @@ loadQuotes();         // Load quotes from storage
 populateCategories(); // Fill the filter dropdown
 createAddQuoteForm(); // Show the quote adding form
 filterQuotes();       // Show filtered quotes
+
+
+async function fetchQuotesFromServer() {
+  const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+  const data = await response.json();
+
+  // Convert response to quote format
+  const serverQuotes = data.slice(0, 10).map(post => ({
+    text: post.title,
+    category: "Server"
+  }));
+
+  return serverQuotes;
+}
+async function syncWithServer() {
+  const serverQuotes = await fetchQuotesFromServer();
+
+  let hasConflict = false;
+
+  serverQuotes.forEach(sq => {
+    const exists = quotes.some(local => local.text === sq.text);
+    if (!exists) {
+      quotes.push(sq);
+      hasConflict = true;
+    }
+  });
+
+  if (hasConflict) {
+    alert("New quotes were synced from the server.");
+    saveQuotes();
+    populateCategories();
+    filterQuotes();
+  }
+}
+setInterval(syncWithServer, 30000); // sync every 30 seconds
+if (hasConflict) {
+  alert("New quotes were synced from the server.");
+}
+loadQuotes();
+populateCategories();
+createAddQuoteForm();
+filterQuotes();
+setInterval(syncWithServer, 30000); // auto-sync
